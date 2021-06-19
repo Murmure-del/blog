@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.develop.mapper.LabelMapper">
+
+    <!--查询一部分-->
+    <select id="getLabelLimit" resultType="Label" parameterType="map">
+        select * from label
+        <if test="field!=null">
+            order by #{field} desc limit #{limit};
+        </if>
+        <if test="field==null">
+            limit #{limit};
+        </if>
+    </select>
+
+    <!--查询所有标签-->
+    <select id="getLabelAll" resultType="Label">
+        select * from label;
+    </select>
+
+    <!--根据文章ID查询标签-->
+    <select id="getArticleToLabel" resultType="Label">
+        select * from label where article_id = #{article_id};
+    </select>
+
+</mapper>

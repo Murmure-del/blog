@@ -1,0 +1,135 @@
+create database Blog charset=utf8;
+use Blog;
+
+Article:
+	id ：文章id（uuid主键）
+	title：文章标题
+	content：文章内容
+	photo：文章详情页图片
+	like_counts：文章点赞数
+	views：文章浏览量
+	comment_counts文章评论数
+	flag：是否是原创
+	appreciate：赞赏是否开启
+	shareStatement：转载是否开启
+	commentabled：评论是否开启
+	publishd：是否发布
+	recommend：是否推荐
+	createTime：文章发布时间
+	updateTime：更新时间
+	
+	sort_id：分类外键
+
+create table `Article`(
+                          id varchar(255) primary key,
+                          title varchar(255),
+                          content text,
+                          photo varchar(255),
+                          like_counts int,
+                          views bigint,
+                          comment_counts int,
+                          flag boolean,
+                          appreciate boolean,
+                          share_statement boolean,
+                          comment_abled boolean,
+                          publishd boolean,
+                          recommend boolean,
+                          create_time date,
+                          update_time date,
+                          types_id varchar(255),
+                          user_id varchar(255),
+                          constraint fk_article_user foreign key (user_id) references User(`id`),
+                          constraint fk_article_types foreign key (types_id) references types(`id`)
+)charset=utf8;
+
+
+
+Comment：
+	id：评论id （不设置为自增，设置uuid，主键）
+	reply_id：回复id（评论回复之后，当前回复评论的id）
+	name：评论用户名（评论一次 10 A币）
+	portrait：评论头像
+	content：评论内容
+	create_time：评论时间
+	like_counts：评论点赞数
+	reply_conuts：评论回复数
+	article_id：外键（文章主键）
+
+注释：当评论之后，如果有回复，就将当前回复评论的id交给当前评论中的回复id
+
+create table Comment(
+                        id varchar(255) primary key,
+                        reply_id varchar(255),
+                        name varchar(20),
+	        portrait varchar(255),
+                        content text,
+                        create_time date,
+                        like_counts int,
+                        reply_counts int,
+                        article_id varchar(255),
+                        foreign key (article_id) references article(`id`)
+) charset=utf8;
+
+
+
+
+Types：
+	id：分类id（主键）
+	name：分类名
+	content：分类简介
+	blog_conuts：分类文章数
+
+create table Types(
+                     id varchar(255) primary key,
+                     name varchar(20),
+                     content varchar(255),
+                     blog_counts int
+) charset=utf8;
+
+
+
+Label：
+	id：标签id（主键）
+	name：标签名字
+	article_id：文章id（外键）
+
+create table Label(
+	id varchar(255) primary key,
+	name varchar(20),
+	article_id varchar(255),
+	foreign key (article_id) references article(`id`)	
+) charset=utf8;
+
+
+User:
+	id：用户id	（主键）
+	username：用户名
+	password：用户密码
+	email：邮箱
+	portrait ：头像
+	type：用户类型
+	create_time：创建用户时间
+	update_time：更新时间
+	A_currency：用户币（用户发布一篇文章 100 A币，评论一次 10 A币）
+
+create table User(
+	id varchar(255) primary key,
+	username varchar(20),
+	password varchar(255),
+	email varchar(255),
+	portrait varchar(255),
+	type varchar(20),
+	create_time date,
+	update_time date
+	A_currency bigint default 0
+) charset=utf8;
+
+
+扩展功能时添加
+AdminUser
+	id：用户id
+	name：用户名
+	password：用户密码
+
+
+

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.develop.mapper.ArticleMapper">
+
+    <!--查询所有文章-->
+    <select id="getArticleAll" resultMap="ArticleMapping">
+        select * from article;
+    </select>
+
+    <select id="getTypes" resultType="Types">
+        select * from types where id = #{types_id}
+    </select>
+
+    <select id="getUser" resultType="User">
+        select * from User where id = #{user_id}
+    </select>
+
+    <select id="getLabel" resultType="Label">
+        select * from Label where id = #{label_id}
+    </select>
+    
+
+    <!--分页查询-->
+    <select id="getArticleLimit" resultMap="ArticleMapping" parameterType="map">
+        select * from article
+        <if test="field!=null">
+            order by #{field} desc limit #{limit};
+        </if>
+        <if test="field==null">
+            limit #{limit};
+        </if>
+    </select>
+
+    <!--映射-->
+    <resultMap id="ArticleMapping" type="Article">
+        <association property="type" column="types_id" javaType="Types" select="getTypes"/>
+        <association property="user" column="user_id" javaType="User" select="getUser"/>
+    </resultMap>
+    <!--根据ID查询-->
+    <select id="getArticleById" resultMap="ArticleMapping">
+        select * from article where id = #{id}
+    </select>
+
+
+    <!--添加文章-->
+    <insert id="insertArticle" parameterType="Article" >
+        insert into Article (
+                            id,title,content,description,photo,like_counts,views,comment_counts,flag,
+                            appreciate, share_statement,comment_abled, publishd, recommend,create_time,
+                            update_time,types_id,user_id
+                            )
+            values (
+                            #{id},#{title}, #{content},#{description},#{photo},#{like_counts},#{views},#{comment_counts},
+                            #{flag},#{appreciate},#{share_statement},#{comment_abled}, #{publishd}, #{recommend},#{create_time},
+                            #{update_time}, #{type.id}, #{user.id}
+                   )
+    </insert>
+
+
+    <!--删除文章-->
+    <delete id="deleteById">
+        delete from article where id = #{id}
+    </delete>
+
+
+    <!--更新-->
+    <update id="updateArticle" parameterType="Article">
+        update Article set
+                           title =#{title},
+                           content =#{content},
+                           description = #{description},
+                           photo = #{photo},
+                           like_counts = #{like_counts},
+                           views = #{views},
+                           comment_counts = #{comment_counts},
+                           flag = #{flag},
+                           appreciate = #{appreciate},
+                           share_statement = #{share_statement},
+                           comment_abled = #{comment_abled},
+                           publishd = #{publishd},
+                           recommend=#{recommend},
+                           create_time = #{create_time},
+                           update_time = #{update_time},
+                           types_id = #{type.id}
+        where id = #{id};
+    </update>
+</mapper>

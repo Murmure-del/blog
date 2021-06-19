@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.develop.mapper.LabelToArticleMapper">
+
+    <!--根据文章id查询出标签id-->
+    <select id="queryLabelAll" resultType="LabelToArticle">
+        select label_id from LabelToArticle where article_id = #{article_id}
+    </select>
+
+    <!--增加文章与标签之间的关系-->
+<!--    <insert id="insertLabel" parameterType="LabelToArticle" >
+        begin
+        <foreach collection="list" item="item" index="index" separator=";">
+            insert into labeltoarticle (article_id,label_id) values
+            (#{item.article_id},
+            #{item.label_id})
+        </foreach>
+        ;end;
+    </insert>-->
+
+    <!--根据文章id删除所有标签id-->
+    <delete id="deleteLabelAll">
+        delete from LabelToArticle where article_id = #{article_id};
+    </delete>
+
+
+    <insert id="insertLabel" parameterType="LabelToArticle">
+        insert into labeltoarticle (article_id,label_id) values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.article_id},#{item.label_id})
+        </foreach>
+    </insert>
+</mapper>
